@@ -9,24 +9,24 @@ using YamlDotNet.Serialization;
 namespace NMARC.Serialization
 {
     /// <summary>
-    /// Converter to help with last accessed dates. The last_date_accessed value is either a real date, or the
+    /// Converter to help with last message posted dates. The last_date_accessed value is either a real date, or the
     /// value "never". The latter doesn't parse well by default, so you end up using object to represent it in
     /// a simple implementation. This type converter handles valid dates and sets DateTime.MinValue for any
     /// instances where it's not parseable.
     /// </summary>
-    public class LastAccessedTypeConverter : IYamlTypeConverter
+    public class LastMessageAtTypeConverter : IYamlTypeConverter
     {
-        private static readonly Type LastAccessedNodeType = typeof(LastAccessed);
+        private static readonly Type LastMessageAtNodeType = typeof(LastMessageAt);
 
         public bool Accepts(Type type)
         {
-            return type == LastAccessedNodeType;
+            return type == LastMessageAtNodeType;
         }
 
         public object ReadYaml(IParser parser, Type type)
         {
             // Set to MinValue explicitly - https://stackoverflow.com/a/305169/636.
-            var result = new LastAccessed() {Value = DateTime.MinValue};
+            var result = new LastMessageAt() { Value = DateTime.MinValue };
 
             // Get the actual value out of the current location in the YAML
             var value = Utilities.GetScalarValue(parser);

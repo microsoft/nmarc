@@ -180,8 +180,12 @@ namespace NMARC
 
         private static List<Group> ParseGroups(Parser parser)
         {
-            var deserializer = new DeserializerBuilder().Build();
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                .WithTypeConverter(new LastMessageAtTypeConverter())
+                .Build();
             var doc = deserializer.Deserialize<GroupsContainer>(parser);
+
             return doc.Groups.Values.ToList();
         }
         private static List<User> ParseUsers(Parser parser)

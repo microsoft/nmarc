@@ -60,6 +60,7 @@
     <Compile Include="Models\GroupAdministrators.cs" />
     <Compile Include="Models\GroupsContainer.cs" />
     <Compile Include="Models\LastAccessed.cs" />
+    <Compile Include="Models\LastMessageAt.cs" />
     <Compile Include="Models\UsersContainer.cs" />
     <Compile Include="Serialization\LastAccessedTypeConverter.cs" />
     <Compile Include="Models\MemberCounts.cs" />
@@ -72,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Serialization\LastMessageAtTypeConverter.cs" />
     <Compile Include="Utilities.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

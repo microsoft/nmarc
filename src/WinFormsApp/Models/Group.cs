@@ -26,7 +26,7 @@ namespace NMARC.Models
         public long MessageCount { get; set; }
 
         [YamlMember(Alias = "last_message_at", ApplyNamingConventions = false)]
-        public DateTime LastMessageDate { get; set; }
+        public LastMessageAt LastMessageDate { get; set; }
 
         [YamlMember(Alias = "o365_connected", ApplyNamingConventions = false)]
         public bool ConnectedToO365 { get; set; }
