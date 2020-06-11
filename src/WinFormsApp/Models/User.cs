@@ -10,9 +10,9 @@ namespace NMARC.Models
     /// </summary>
     public class User
     {
-        [YamlMember(Alias = "Name")] public string Name { get; set; }
+        [YamlMember(Alias = "name", ApplyNamingConventions = false)] public string Name { get; set; }
 
-        [YamlMember(Alias = "Id")] public long Id { get; set; }
+        [YamlMember(Alias = "id", ApplyNamingConventions = false)] public long Id { get; set; }
 
         [YamlMember(Alias = "email", ApplyNamingConventions = false)]
         public string Email { get; set; }
@@ -35,7 +35,7 @@ namespace NMARC.Models
         [YamlMember(Alias = "user_mapped", ApplyNamingConventions = false)]
         public bool IsUserMapped { get; set; }
 
-        [YamlMember(Alias = "public_message_count", ApplyNamingConventions = false)]
+        [YamlMember(Alias = "community_message_count", ApplyNamingConventions = false)]
         public object PublicMessageCount { get; set; }
 
         [YamlMember(Alias = "private_message_count", ApplyNamingConventions = false)]

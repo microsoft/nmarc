@@ -11,8 +11,8 @@ namespace NMARC.Models
     /// </summary>
     public class Group
     {
-        [YamlMember(Alias = "Name")] public string Name { get; set; }
-        [YamlMember(Alias = "Id")] public long Id { get; set; }
+        [YamlMember(Alias = "name", ApplyNamingConventions = false)] public string Name { get; set; }
+        [YamlMember(Alias = "id", ApplyNamingConventions = false)] public long Id { get; set; }
 
         [YamlMember(Alias = "type")] public string Type { get; set; }
 
@@ -22,7 +22,7 @@ namespace NMARC.Models
         [YamlMember(Alias = "state", ApplyNamingConventions = false)]
         public string State { get; set; }
 
-        [YamlMember(Alias = "messages_count", ApplyNamingConventions = false)]
+        [YamlMember(Alias = "approximate_messages_count", ApplyNamingConventions = false)]
         public long MessageCount { get; set; }
 
         [YamlMember(Alias = "last_message_at", ApplyNamingConventions = false)]

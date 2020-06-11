@@ -4,12 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using NMARC.Models;
 using NMARC.Serialization;
+using YamlDotNet.Core;
+using YamlDotNet.Core.Events;
 
 namespace NMARC
 {
@@ -44,7 +47,9 @@ namespace NMARC
             {
                 using (var sr = new StreamReader(txtYamlInputPath.Text))
                 {
-                    var report = ParseAlignmentReport(sr);
+                    //var report = ParseAlignmentReport(sr);
+                    var report = ParseAlignmentReportReal(txtYamlInputPath.Text);
+                    
 
                     txtResultsBox.Text += "YAML file loaded and parsed.\n\r\n";
                     txtResultsBox.Text += $"Found {report.Groups.Count} groups and {report.Users.Count} users.\n\r\n";
@@ -81,11 +86,11 @@ namespace NMARC
 
             groupOutput.AppendLine(
                 "Id,Name,Type,PrivacySetting,State,MessageCount,LastMessageDate,ConnectedToO365,GroupAdministrators,Memberships.External,Memberships.Internal,Uploads.SharePoint,Uploads.Yammer");
-            foreach (KeyValuePair<long, Group> entry in report.Groups)
+            foreach (var group in report.Groups)
             {
-                Console.WriteLine($"{entry.Key}:{entry.Value}");
-                var g = entry.Value;
-                groupOutput.AppendLine(g.GetCsv());
+                Console.WriteLine($"{group.Id}:{group.Name}");
+
+                groupOutput.AppendLine(group.GetCsv());
             }
 
             Utilities.WriteFile($@"{basePath}\groups.txt", groupOutput);
@@ -94,12 +99,11 @@ namespace NMARC
             var userOutput = new StringBuilder();
             userOutput.AppendLine(
                 "Email,Internal,State,PrivateFileCount,IsUserMapped,PublicMessageCount,PrivateMessageCount,LastAccessed");
-            foreach (KeyValuePair<long, User> entry in report.Users)
+            foreach (var user in report.Users)
             {
-                Console.WriteLine($"{entry.Key}:{entry.Value}");
-                var u = entry.Value;
+                Console.WriteLine($"{user.Id}:{user.Email}");
 
-                userOutput.AppendLine(u.GetCsv());
+                userOutput.AppendLine(user.GetCsv());
             }
 
             Utilities.WriteFile($@"{basePath}\users.txt", userOutput);
@@ -121,6 +125,74 @@ namespace NMARC
             var report = deserializer.Deserialize<AlignmentReport>(alignmentReportYaml);
 
             return report;
+        }
+
+        private static AlignmentReport ParseAlignmentReportReal(string path)
+        {
+            DocumentStart documentStartEvent;
+            var report = new AlignmentReport();
+
+            using (var input = new StreamReader(path))
+            {
+                int iteration = 0; // Manually tracking this to map document to model
+                var parser = new Parser(input);
+
+                // Consume the stream start event "manually"
+                parser.Consume<StreamStart>();
+
+                // Parse each document in the stream
+                while (parser.TryConsume(out documentStartEvent))
+                {
+                    // We expect a message header line document, but actual content in later documents.
+                    if (parser.Current.GetType() == typeof(Scalar))
+                    {
+                        var deserializer = new DeserializerBuilder().Build();
+                        var scalar = deserializer.Deserialize<string>(parser);
+                        Console.WriteLine(scalar);
+                        parser.MoveNext();
+                        iteration += 1;
+                        continue;
+                    }
+
+                    // Handle documents with content
+                    switch (iteration)
+                    {
+                        case 1:
+                            report.Groups = ParseGroups(parser);
+                            Console.WriteLine($"Groups: {report.Groups.Count}");
+                            break;
+                        case 2:
+                            report.Users = ParseUsers(parser);
+                            Console.WriteLine($"Users: {report.Users.Count}");
+                            break;
+                        default:
+                            Console.WriteLine("Unknown document.");
+                            break;
+                    }
+
+                    parser.MoveNext();
+                    iteration += 1;
+                }
+            }
+
+            return report;
+        }
+
+        private static List<Group> ParseGroups(Parser parser)
+        {
+            var deserializer = new DeserializerBuilder().Build();
+            var doc = deserializer.Deserialize<GroupsContainer>(parser);
+            return doc.Groups.Values.ToList();
+        }
+        private static List<User> ParseUsers(Parser parser)
+        {
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                .WithTypeConverter(new LastAccessedTypeConverter())
+                .Build();
+            var doc = deserializer.Deserialize<UsersContainer>(parser);
+
+            return doc.Users.Values.ToList();
         }
     }
 }
