@@ -9,7 +9,7 @@ application that needs to be compiled using Visual Studio 2019.
 
 ## Community Help and Support
 
-This tool is *unsupported* by Microsoft Microsoft. It is expected that users understand how to compile and run Visual Studio 2019
+This tool is *unsupported* by Microsoft Support (CSS). It is expected that users understand how to compile and run Visual Studio 2019
 projects, or have assistance from others in their organization to do this.
 
 [GitHub Issues](../../issues) is the best place to ask questions, report bugs, and new request features.  Updates will be 
