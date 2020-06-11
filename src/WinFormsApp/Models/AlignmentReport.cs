@@ -11,9 +11,9 @@ namespace NMARC.Models
     /// </summary>
     public class AlignmentReport
     {
-        [YamlMember(Alias = "groups")]
-        public Dictionary<long, Group> Groups { get; set; }
-        [YamlMember(Alias = "users")]
-        public Dictionary<long, User> Users { get; set; }
+        [YamlMember(Alias = "GROUPS", ApplyNamingConventions = false)]
+        public List<Group> Groups { get; set; }
+        [YamlMember(Alias = "USERS", ApplyNamingConventions = false)]
+        public List<User> Users { get; set; }
     }
 }
