@@ -41,6 +41,9 @@ namespace NMARC.Models
         [YamlMember(Alias = "private_message_count", ApplyNamingConventions = false)]
         public object PrivateMessageCount { get; set; }
 
+        [YamlMember(Alias = "guest_group_ids", ApplyNamingConventions = false)]
+        public object GuestGroupIdList { get; set; }
+
         /// <summary>
         /// Gets a representation of the user as a row of CSV
         /// </summary>

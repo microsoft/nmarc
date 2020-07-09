@@ -2,17 +2,10 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 using NMARC.Models;
 using NMARC.Serialization;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
 
 namespace NMARC
 {
@@ -28,6 +21,7 @@ namespace NMARC
             if (dlgOpenYaml.ShowDialog() == DialogResult.OK)
             {
                 txtYamlInputPath.Text = dlgOpenYaml.FileName;
+                txtResultsBox.Text = "";
             }
         }
 
@@ -36,6 +30,7 @@ namespace NMARC
             if (DlgSelectOutputFolder.ShowDialog() == DialogResult.OK)
             {
                 TxtOutputPath.Text = DlgSelectOutputFolder.SelectedPath;
+                btnConvert.Enabled = true;
             }
         }
 
@@ -45,16 +40,20 @@ namespace NMARC
 
             try
             {
-                using (var sr = new StreamReader(txtYamlInputPath.Text))
+                var report = AlignmentReportParser.ParseAlignmentReport(txtYamlInputPath.Text);
+                
+                txtResultsBox.Text += "YAML file loaded and parsed.\n\r\n";
+                txtResultsBox.Text += $"Found {report.Groups.Count} groups and {report.Users.Count} users.\n\r\n";
+                
+                if (report.Groups.Count == 0 && report.Users.Count == 0)
                 {
-                    //var report = ParseAlignmentReport(sr);
-                    var report = ParseAlignmentReportReal(txtYamlInputPath.Text);
-                    
-
-                    txtResultsBox.Text += "YAML file loaded and parsed.\n\r\n";
-                    txtResultsBox.Text += $"Found {report.Groups.Count} groups and {report.Users.Count} users.\n\r\n";
-                    txtResultsBox.Text += "Exporting to multiple files in output directory.\n\r\n";
+                    txtResultsBox.Text += $"No items to export.\n\r\n";
+                }
+                else
+                { 
+                    txtResultsBox.Text += $"Exporting to {TxtOutputPath.Text}.\n\r\n";
                     ExportReport(report);
+                    txtResultsBox.Text += "Export complete.\n\r\n";
                 }
             }
             catch (Exception exception)
@@ -62,7 +61,7 @@ namespace NMARC
                 txtResultsBox.Text += exception;
 
                 txtResultsBox.Text +=
-                    "Conversion error. Please report the messages listed above after removing any sensitive data.\n\r\n";
+                    "\n\r\n\n\r\nAn error occurred. Please report the messages listed above after removing any sensitive data.\n\r\n";
             }
         }
 
@@ -107,96 +106,6 @@ namespace NMARC
             }
 
             Utilities.WriteFile($@"{basePath}\users.txt", userOutput);
-        }
-
-
-        /// <summary>
-        /// Deserializes the alignment report into useful objects we can work with.
-        /// </summary>
-        /// <param name="alignmentReportYaml"></param>
-        /// <returns>AlignmentReport containing all data from the YAML</returns>
-        private static AlignmentReport ParseAlignmentReport(TextReader alignmentReportYaml)
-        {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .WithTypeConverter(new LastAccessedTypeConverter())
-                .Build();
-
-            var report = deserializer.Deserialize<AlignmentReport>(alignmentReportYaml);
-
-            return report;
-        }
-
-        private static AlignmentReport ParseAlignmentReportReal(string path)
-        {
-            DocumentStart documentStartEvent;
-            var report = new AlignmentReport();
-
-            using (var input = new StreamReader(path))
-            {
-                int iteration = 0; // Manually tracking this to map document to model
-                var parser = new Parser(input);
-
-                // Consume the stream start event "manually"
-                parser.Consume<StreamStart>();
-
-                // Parse each document in the stream
-                while (parser.TryConsume(out documentStartEvent))
-                {
-                    // We expect a message header line document, but actual content in later documents.
-                    if (parser.Current.GetType() == typeof(Scalar))
-                    {
-                        var deserializer = new DeserializerBuilder().Build();
-                        var scalar = deserializer.Deserialize<string>(parser);
-                        Console.WriteLine(scalar);
-                        parser.MoveNext();
-                        iteration += 1;
-                        continue;
-                    }
-
-                    // Handle documents with content
-                    switch (iteration)
-                    {
-                        case 1:
-                            report.Groups = ParseGroups(parser);
-                            Console.WriteLine($"Groups: {report.Groups.Count}");
-                            break;
-                        case 2:
-                            report.Users = ParseUsers(parser);
-                            Console.WriteLine($"Users: {report.Users.Count}");
-                            break;
-                        default:
-                            Console.WriteLine("Unknown document.");
-                            break;
-                    }
-
-                    parser.MoveNext();
-                    iteration += 1;
-                }
-            }
-
-            return report;
-        }
-
-        private static List<Group> ParseGroups(Parser parser)
-        {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .WithTypeConverter(new LastMessageAtTypeConverter())
-                .Build();
-            var doc = deserializer.Deserialize<GroupsContainer>(parser);
-
-            return doc.Groups.Values.ToList();
-        }
-        private static List<User> ParseUsers(Parser parser)
-        {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .WithTypeConverter(new LastAccessedTypeConverter())
-                .Build();
-            var doc = deserializer.Deserialize<UsersContainer>(parser);
-
-            return doc.Users.Values.ToList();
         }
     }
 }

@@ -15,5 +15,8 @@ namespace NMARC.Models
         public List<Group> Groups { get; set; }
         [YamlMember(Alias = "USERS", ApplyNamingConventions = false)]
         public List<User> Users { get; set; }
+        [YamlMember(Alias = "GROUP_LEVEL_GUESTS", ApplyNamingConventions = false)]
+        public List<GroupLevelGuest> GroupLevelGuests { get; set; }
+
     }
 }
