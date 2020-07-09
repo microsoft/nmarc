@@ -115,6 +115,10 @@ namespace NMARC
                         }
                     }
                 }
+                else
+                {
+                    groupAdminOutput.AppendLine($"{group.Id},,No Admins");
+                }
             }
 
             Utilities.WriteFile($@"{basePath}\groupadmins.txt", groupAdminOutput);
