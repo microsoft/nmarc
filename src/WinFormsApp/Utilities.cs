@@ -56,7 +56,7 @@ namespace NMARC
         {
             if (File.Exists(path))
             {
-                throw new IOException("A file exists at {path}. Please select another output directory, or delete the exist file first.");
+                throw new IOException($"A file exists at {path}. Please select another output directory, or delete the exist file first.");
             }
             else
             {

@@ -96,6 +96,7 @@ namespace NMARC
             // btnConvert
             // 
             this.btnConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConvert.Enabled = false;
             this.btnConvert.Location = new System.Drawing.Point(632, 486);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(159, 23);
@@ -107,8 +108,7 @@ namespace NMARC
             // dlgOpenYaml
             // 
             this.dlgOpenYaml.FileName = "openFileDialog1";
-            this.dlgOpenYaml.InitialDirectory = "" +
-    "mples";
+            this.dlgOpenYaml.InitialDirectory = "mples";
             // 
             // FrmNativeModeConc
             // 
