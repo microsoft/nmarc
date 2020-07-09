@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using NMARC.Models;
@@ -80,20 +82,46 @@ namespace NMARC
 
             Console.WriteLine("Write...");
             
-            // GROUPS
-            var groupOutput = new StringBuilder();
+            WriteGroupsReport(report, basePath);
 
-            groupOutput.AppendLine(
-                "Id,Name,Type,PrivacySetting,State,MessageCount,LastMessageDate,ConnectedToO365,GroupAdministrators,Memberships.External,Memberships.Internal,Uploads.SharePoint,Uploads.Yammer");
+            WriteUsersReport(report, basePath);
+
+            WriteGroupAdminsReport(report, basePath);
+        }
+
+        private static void WriteGroupAdminsReport(AlignmentReport report, string basePath)
+        {
+            var groupAdminOutput = new StringBuilder();
+            groupAdminOutput.AppendLine("GroupID,CreationRightsState,Email");
+
             foreach (var group in report.Groups)
             {
-                Console.WriteLine($"{group.Id}:{group.Name}");
+                var admins = group.Administrators;
 
-                groupOutput.AppendLine(group.GetCsv());
+                if (!(admins is string))
+                {
+                    Console.WriteLine($@"Group:{group.Administrators}");
+                    var convAdmins = (Dictionary<object, object>) admins;
+
+                    foreach (KeyValuePair<object, object> entry in convAdmins)
+                    {
+                        var key = entry.Key as string;
+                        var vals = (List<object>)entry.Value;
+
+                        foreach (var adminEmail in vals)
+                        {
+                            var email = (string) adminEmail;
+                            groupAdminOutput.AppendLine( $"{group.Id},{key},{email}");
+                        }
+                    }
+                }
             }
 
-            Utilities.WriteFile($@"{basePath}\groups.txt", groupOutput);
+            Utilities.WriteFile($@"{basePath}\groupadmins.txt", groupAdminOutput);
+        }
 
+        private static void WriteUsersReport(AlignmentReport report, string basePath)
+        {
             // USERS
             var userOutput = new StringBuilder();
             userOutput.AppendLine(
@@ -106,6 +134,23 @@ namespace NMARC
             }
 
             Utilities.WriteFile($@"{basePath}\users.txt", userOutput);
+        }
+
+        private static void WriteGroupsReport(AlignmentReport report, string basePath)
+        {
+            // GROUPS
+            var groupOutput = new StringBuilder();
+
+            groupOutput.AppendLine(
+                "Id,Name,Type,PrivacySetting,State,MessageCount,LastMessageDate,ConnectedToO365,Memberships.External,Memberships.Internal,Uploads.SharePoint,Uploads.Yammer");
+            foreach (var group in report.Groups)
+            {
+                Console.WriteLine($"{@group.Id}:{@group.Name}");
+
+                groupOutput.AppendLine(@group.GetCsv());
+            }
+
+            Utilities.WriteFile($@"{basePath}\groups.txt", groupOutput);
         }
     }
 }

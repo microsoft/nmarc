@@ -47,7 +47,7 @@ namespace NMARC.Models
         public string GetCsv()
         {
             return
-                $@"{Id},{Name},{Type},{PrivacySetting},{State},{MessageCount},{LastMessageDate},{ConnectedToO365},{Administrators},{Memberships.External},{Memberships.Internal},{Uploads.SharePoint},{Uploads.Yammer}";
+                $@"{Id},{Name},{Type},{PrivacySetting},{State},{MessageCount},{LastMessageDate},{ConnectedToO365},{Memberships.External},{Memberships.Internal},{Uploads.SharePoint},{Uploads.Yammer}";
         }
     }
 }
