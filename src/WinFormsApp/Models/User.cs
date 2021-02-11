@@ -44,6 +44,9 @@ namespace NMARC.Models
         [YamlMember(Alias = "guest_group_ids", ApplyNamingConventions = false)]
         public object GuestGroupIdList { get; set; }
 
+        [YamlMember(Alias = "AAD_state", ApplyNamingConventions = false)]
+        public string AzureADState { get; set; }
+
         /// <summary>
         /// Gets a representation of the user as a row of CSV
         /// </summary>
@@ -51,7 +54,7 @@ namespace NMARC.Models
         public string GetCsv()
         {
             return
-                $@"{Email},{Internal},{State},{PrivateFileCount},{IsUserMapped},{PublicMessageCount},{PrivateMessageCount},{LastAccessed}";
+                $@"{Email},{Internal},{State},{PrivateFileCount},{IsUserMapped},{PublicMessageCount},{PrivateMessageCount},{LastAccessed},{AzureADState}";
         }
 
         public string GetTsv()

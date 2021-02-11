@@ -129,7 +129,7 @@ namespace NMARC
             // USERS
             var userOutput = new StringBuilder();
             userOutput.AppendLine(
-                "Email,Internal,State,PrivateFileCount,IsUserMapped,PublicMessageCount,PrivateMessageCount,LastAccessed");
+                "Email,Internal,State,PrivateFileCount,IsUserMapped,PublicMessageCount,PrivateMessageCount,LastAccessed,AAD_State");
             foreach (var user in report.Users)
             {
                 Console.WriteLine($"{user.Id}:{user.Email}");
