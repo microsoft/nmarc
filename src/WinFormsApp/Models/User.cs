@@ -32,9 +32,6 @@ namespace NMARC.Models
         [YamlMember(Alias = "private_message_files", ApplyNamingConventions = false)]
         public long PrivateFileCount { get; set; }
 
-        [YamlMember(Alias = "user_mapped", ApplyNamingConventions = false)]
-        public bool IsUserMapped { get; set; }
-
         [YamlMember(Alias = "community_message_count", ApplyNamingConventions = false)]
         public object PublicMessageCount { get; set; }
 
@@ -44,6 +41,9 @@ namespace NMARC.Models
         [YamlMember(Alias = "guest_group_ids", ApplyNamingConventions = false)]
         public object GuestGroupIdList { get; set; }
 
+        [YamlMember(Alias = "AAD_state", ApplyNamingConventions = false)]
+        public string AzureADState { get; set; }
+
         /// <summary>
         /// Gets a representation of the user as a row of CSV
         /// </summary>
@@ -51,13 +51,13 @@ namespace NMARC.Models
         public string GetCsv()
         {
             return
-                $@"{Email},{Internal},{State},{PrivateFileCount},{IsUserMapped},{PublicMessageCount},{PrivateMessageCount},{LastAccessed}";
+                $@"{Email},{Internal},{State},{PrivateFileCount},{PublicMessageCount},{PrivateMessageCount},{LastAccessed},{AzureADState}";
         }
 
         public string GetTsv()
         {
             return
-                $@"{Email}\t{Internal}\t{State}\t{PrivateFileCount}\t{IsUserMapped}\t{PublicMessageCount}\t{PrivateMessageCount}";
+                $@"{Email}\t{Internal}\t{State}\t{PrivateFileCount}\t{PublicMessageCount}\t{PrivateMessageCount}";
         }
     }
 }
