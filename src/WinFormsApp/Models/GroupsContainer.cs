@@ -8,7 +8,7 @@ namespace NMARC.Models
 {
     public class GroupsContainer
     {
-        [YamlMember(Alias = "GROUPS", ApplyNamingConventions = false)]
+        [YamlMember(Alias = ":GROUPS", ApplyNamingConventions = false)]
         public Dictionary<long, Group> Groups { get; set; }
     }
 }

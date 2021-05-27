@@ -8,7 +8,7 @@ namespace NMARC.Models
 {
     public class UsersContainer
     {
-        [YamlMember(Alias = "USERS", ApplyNamingConventions = false)]
+        [YamlMember(Alias = ":USERS", ApplyNamingConventions = false)]
         public Dictionary<long, User> Users { get; set; }
     }
 }
