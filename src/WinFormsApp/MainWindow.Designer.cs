@@ -31,6 +31,8 @@ namespace NMARC
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmNativeModeConc));
             this.BtnLoadYamlFile = new System.Windows.Forms.Button();
             this.txtYamlInputPath = new System.Windows.Forms.TextBox();
             this.BtnSetOutputDir = new System.Windows.Forms.Button();
@@ -39,6 +41,7 @@ namespace NMARC
             this.btnConvert = new System.Windows.Forms.Button();
             this.dlgOpenYaml = new System.Windows.Forms.OpenFileDialog();
             this.DlgSelectOutputFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // BtnLoadYamlFile
@@ -48,6 +51,7 @@ namespace NMARC
             this.BtnLoadYamlFile.Size = new System.Drawing.Size(124, 23);
             this.BtnLoadYamlFile.TabIndex = 0;
             this.BtnLoadYamlFile.Text = "Select YAML File";
+            this.toolTip.SetToolTip(this.BtnLoadYamlFile, "Specify the path to the Alignment Report downloaded from Yammer.");
             this.BtnLoadYamlFile.UseVisualStyleBackColor = true;
             this.BtnLoadYamlFile.Click += new System.EventHandler(this.LoadYamlFile_Click);
             // 
@@ -68,6 +72,7 @@ namespace NMARC
             this.BtnSetOutputDir.Size = new System.Drawing.Size(123, 23);
             this.BtnSetOutputDir.TabIndex = 2;
             this.BtnSetOutputDir.Text = "Set Output Folder";
+            this.toolTip.SetToolTip(this.BtnSetOutputDir, "Set an empty output folder where the CSV files will be created.");
             this.BtnSetOutputDir.UseVisualStyleBackColor = true;
             this.BtnSetOutputDir.Click += new System.EventHandler(this.BtnSetOutputDir_Click);
             // 
@@ -102,13 +107,19 @@ namespace NMARC
             this.btnConvert.Size = new System.Drawing.Size(159, 23);
             this.btnConvert.TabIndex = 5;
             this.btnConvert.Text = "Convert Alignment Report";
+            this.toolTip.SetToolTip(this.btnConvert, "Start conversion when the input and output options are selected.");
             this.btnConvert.UseVisualStyleBackColor = true;
             this.btnConvert.Click += new System.EventHandler(this.BtnConvert_Click);
             // 
             // dlgOpenYaml
             // 
-            this.dlgOpenYaml.FileName = "openFileDialog1";
-            this.dlgOpenYaml.InitialDirectory = "mples";
+            this.dlgOpenYaml.Filter = "Alignment Reports (*.yml)|*.yml|All files (*.*)|*.*";
+            this.dlgOpenYaml.Title = "Select an Alignment Report";
+            // 
+            // DlgSelectOutputFolder
+            // 
+            this.DlgSelectOutputFolder.Description = "Select an output folder for the CSV files produced by this tool. This needs to be" +
+    " an empty folder.";
             // 
             // FrmNativeModeConc
             // 
@@ -121,6 +132,7 @@ namespace NMARC
             this.Controls.Add(this.BtnSetOutputDir);
             this.Controls.Add(this.txtYamlInputPath);
             this.Controls.Add(this.BtnLoadYamlFile);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmNativeModeConc";
             this.Text = "Native Mode Alignment Report Converter";
             this.ResumeLayout(false);
@@ -138,6 +150,7 @@ namespace NMARC
         private System.Windows.Forms.Button btnConvert;
         private System.Windows.Forms.OpenFileDialog dlgOpenYaml;
         private System.Windows.Forms.FolderBrowserDialog DlgSelectOutputFolder;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 
