@@ -87,6 +87,8 @@ namespace NMARC
             WriteUsersReport(report, basePath);
 
             WriteGroupAdminsReport(report, basePath);
+
+            WriteCommunityGuestsReport(report, basePath);
         }
 
         private static void WriteGroupAdminsReport(AlignmentReport report, string basePath)
@@ -122,6 +124,27 @@ namespace NMARC
             }
 
             Utilities.WriteFile($@"{basePath}\groupadmins.txt", groupAdminOutput);
+        }
+
+        private static void WriteCommunityGuestsReport(AlignmentReport report, string basePath)
+        {
+            var communityGuestOutput = new StringBuilder();
+            communityGuestOutput.AppendLine("GroupID,Email");
+
+            foreach (var group in report.Groups)
+            {
+                if(group.ActiveCommunityGuests != null) { 
+                    if(group.ActiveCommunityGuests.Count > 0)
+                    {
+                        foreach (var guest in group.ActiveCommunityGuests)
+                        {
+                            communityGuestOutput.AppendLine($"{group.Id},{guest}");
+                        }
+                    }
+                }
+            }
+
+            Utilities.WriteFile($@"{basePath}\communityguests.txt", communityGuestOutput);
         }
 
         private static void WriteUsersReport(AlignmentReport report, string basePath)

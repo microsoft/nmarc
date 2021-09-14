@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using YamlDotNet.Serialization;
 
 namespace NMARC.Models
@@ -39,6 +40,9 @@ namespace NMARC.Models
 
         [YamlMember(Alias = "group_admins", ApplyNamingConventions = false)]
         public object Administrators { get; set; }
+
+        [YamlMember(Alias = "active_community_guests", ApplyNamingConventions = false)]
+        public List<string> ActiveCommunityGuests { get; set; }
 
         /// <summary>
         /// Gets a representation of the group as a row of CSV
