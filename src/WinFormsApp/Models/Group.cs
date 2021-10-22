@@ -43,7 +43,9 @@ namespace NMARC.Models
 
         [YamlMember(Alias = "active_community_guests", ApplyNamingConventions = false)]
         public List<string> ActiveCommunityGuests { get; set; }
-
+                
+        [YamlMember(Alias = "other_community_guests", ApplyNamingConventions = false)]
+        public List<string> OtherCommunityGuests { get; set; }
         /// <summary>
         /// Gets a representation of the group as a row of CSV
         /// </summary>
