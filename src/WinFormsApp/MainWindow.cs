@@ -13,6 +13,11 @@ namespace NMARC
 {
     public partial class FrmNativeModeConc : Form
     {
+        /// <summary>
+        /// File name extension without the dot. Example: "csv".
+        /// </summary>
+        private const string OUTPUT_FILE_EXTENSION = "csv";
+
         public FrmNativeModeConc()
         {
             InitializeComponent();
@@ -125,7 +130,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\groupadmins.txt", groupAdminOutput);
+            Utilities.WriteFile($@"{basePath}\groupadmins.{OUTPUT_FILE_EXTENSION}", groupAdminOutput);
         }
 
         private static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath)
@@ -146,7 +151,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\communityguests.txt", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\communityguests.{OUTPUT_FILE_EXTENSION}", communityGuestOutput);
         }
 
         private static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath)
@@ -168,7 +173,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\othercommunityguests.txt", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\othercommunityguests.{OUTPUT_FILE_EXTENSION}", communityGuestOutput);
         }
 
         private static void WriteUsersReport(AlignmentReport report, string basePath)
@@ -184,7 +189,7 @@ namespace NMARC
                 userOutput.AppendLine(user.GetCsv());
             }
 
-            Utilities.WriteFile($@"{basePath}\users.txt", userOutput);
+            Utilities.WriteFile($@"{basePath}\users.{OUTPUT_FILE_EXTENSION}", userOutput);
         }
 
         private static void WriteGroupsReport(AlignmentReport report, string basePath)
@@ -201,7 +206,7 @@ namespace NMARC
                 groupOutput.AppendLine(@group.GetCsv());
             }
 
-            Utilities.WriteFile($@"{basePath}\groups.txt", groupOutput);
+            Utilities.WriteFile($@"{basePath}\groups.{OUTPUT_FILE_EXTENSION}", groupOutput);
         }
     }
 }
