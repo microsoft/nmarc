@@ -9,7 +9,7 @@
   <Identity
     Name="62908BrianLyttle.NMARC"
     Publisher="CN=682375EB-F630-49C7-8CBC-69A6E7AF1C2B"
-    Version="1.0.6.0" />
+    Version="1.0.7.0" />
 
   <Properties>
     <DisplayName>NMARC</DisplayName>
