@@ -125,7 +125,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\groupadmins.txt", groupAdminOutput);
+            Utilities.WriteFile($@"{basePath}\groupadmins.csv", groupAdminOutput);
         }
 
         private static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath)
@@ -146,7 +146,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\communityguests.txt", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\communityguests.csv", communityGuestOutput);
         }
 
         private static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath)
@@ -168,7 +168,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\othercommunityguests.txt", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\othercommunityguests.csv", communityGuestOutput);
         }
 
         private static void WriteUsersReport(AlignmentReport report, string basePath)
@@ -184,7 +184,7 @@ namespace NMARC
                 userOutput.AppendLine(user.GetCsv());
             }
 
-            Utilities.WriteFile($@"{basePath}\users.txt", userOutput);
+            Utilities.WriteFile($@"{basePath}\users.csv", userOutput);
         }
 
         private static void WriteGroupsReport(AlignmentReport report, string basePath)
@@ -201,7 +201,7 @@ namespace NMARC
                 groupOutput.AppendLine(@group.GetCsv());
             }
 
-            Utilities.WriteFile($@"{basePath}\groups.txt", groupOutput);
+            Utilities.WriteFile($@"{basePath}\groups.csv", groupOutput);
         }
     }
 }
