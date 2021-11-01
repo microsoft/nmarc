@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -13,11 +13,6 @@ namespace NMARC
 {
     public partial class FrmNativeModeConc : Form
     {
-        /// <summary>
-        /// File name extension without the dot. Example: "csv".
-        /// </summary>
-        private const string OUTPUT_FILE_EXTENSION = "csv";
-
         public FrmNativeModeConc()
         {
             InitializeComponent();
@@ -130,7 +125,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\groupadmins.{OUTPUT_FILE_EXTENSION}", groupAdminOutput);
+            Utilities.WriteFile($@"{basePath}\groupadmins.csv", groupAdminOutput);
         }
 
         private static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath)
@@ -151,7 +146,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\communityguests.{OUTPUT_FILE_EXTENSION}", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\communityguests.csv", communityGuestOutput);
         }
 
         private static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath)
@@ -173,7 +168,7 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\othercommunityguests.{OUTPUT_FILE_EXTENSION}", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\othercommunityguests.csv", communityGuestOutput);
         }
 
         private static void WriteUsersReport(AlignmentReport report, string basePath)
@@ -189,7 +184,7 @@ namespace NMARC
                 userOutput.AppendLine(user.GetCsv());
             }
 
-            Utilities.WriteFile($@"{basePath}\users.{OUTPUT_FILE_EXTENSION}", userOutput);
+            Utilities.WriteFile($@"{basePath}\users.csv", userOutput);
         }
 
         private static void WriteGroupsReport(AlignmentReport report, string basePath)
@@ -206,7 +201,7 @@ namespace NMARC
                 groupOutput.AppendLine(@group.GetCsv());
             }
 
-            Utilities.WriteFile($@"{basePath}\groups.{OUTPUT_FILE_EXTENSION}", groupOutput);
+            Utilities.WriteFile($@"{basePath}\groups.csv", groupOutput);
         }
     }
 }
