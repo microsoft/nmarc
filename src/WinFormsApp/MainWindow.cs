@@ -13,6 +13,9 @@ namespace NMARC
 {
     public partial class FrmNativeModeConc : Form
     {
+        private string fileExtension= ".CSV";
+        private string outputSeparator = ",";
+
         public FrmNativeModeConc()
         {
             InitializeComponent();
@@ -33,6 +36,21 @@ namespace NMARC
             {
                 TxtOutputPath.Text = DlgSelectOutputFolder.SelectedPath;
                 btnConvert.Enabled = true;
+            }
+        }
+
+        private void btnOptions_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OptionsDialog(fileExtension, outputSeparator))
+            {
+                var result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    fileExtension = dialog.FileExtension;
+                    outputSeparator = dialog.OutputSeparator;
+                    MessageBox.Show($"File Extension: {dialog.FileExtension}\r\nOutput Separator: {dialog.OutputSeparator}");
+                }
             }
         }
 
@@ -203,5 +221,7 @@ namespace NMARC
 
             Utilities.WriteFile($@"{basePath}\groups.csv", groupOutput);
         }
+
+
     }
 }
