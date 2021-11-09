@@ -42,6 +42,7 @@ namespace NMARC
             this.dlgOpenYaml = new System.Windows.Forms.OpenFileDialog();
             this.DlgSelectOutputFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnOptions = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnLoadYamlFile
@@ -121,11 +122,23 @@ namespace NMARC
             this.DlgSelectOutputFolder.Description = "Select an output folder for the CSV files produced by this tool. This needs to be" +
     " an empty folder.";
             // 
+            // btnOptions
+            // 
+            this.btnOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnOptions.Location = new System.Drawing.Point(12, 486);
+            this.btnOptions.Name = "btnOptions";
+            this.btnOptions.Size = new System.Drawing.Size(75, 23);
+            this.btnOptions.TabIndex = 6;
+            this.btnOptions.Text = "Options";
+            this.btnOptions.UseVisualStyleBackColor = true;
+            this.btnOptions.Click += new System.EventHandler(this.btnOptions_Click);
+            // 
             // FrmNativeModeConc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(803, 521);
+            this.Controls.Add(this.btnOptions);
             this.Controls.Add(this.btnConvert);
             this.Controls.Add(this.txtResultsBox);
             this.Controls.Add(this.TxtOutputPath);
@@ -151,6 +164,7 @@ namespace NMARC
         private System.Windows.Forms.OpenFileDialog dlgOpenYaml;
         private System.Windows.Forms.FolderBrowserDialog DlgSelectOutputFolder;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Button btnOptions;
     }
 }
 
