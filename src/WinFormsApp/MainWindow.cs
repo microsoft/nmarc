@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -49,7 +48,7 @@ namespace NMARC
                 {
                     fileExtension = dialog.FileExtension;
                     outputSeparator = dialog.OutputSeparator;
-                    MessageBox.Show($"File Extension: {dialog.FileExtension}\r\nOutput Separator: {dialog.OutputSeparator}");
+                    Console.WriteLine($"File Extension: {dialog.FileExtension}\r\nOutput Separator: {dialog.OutputSeparator}");
                 }
             }
         }
@@ -72,7 +71,7 @@ namespace NMARC
                 else
                 { 
                     txtResultsBox.Text += $"Exporting to {TxtOutputPath.Text}.\n\r\n";
-                    ExportReport(report);
+                    ExportReport(report, DlgSelectOutputFolder.SelectedPath, fileExtension, outputSeparator);
                     txtResultsBox.Text += "Export complete.\n\r\n";
                 }
             }
@@ -89,32 +88,32 @@ namespace NMARC
         /// Exports the alignment report to multiple files in a specific folder.
         /// </summary>
         /// <param name="report">AlignmentReport instance containing deserialized data.</param>
-        private void ExportReport(AlignmentReport report)
+        private void ExportReport(AlignmentReport report, string path, string extension, string separator)
         {
             // TODO: Refactoring the code in this method requires some extra work:
             //       * Headers match up with the models. Use reflection, or something newer in C#, to get these automatically.
             //       * Manually parse the YAML, so that we don't have to deal with the dictionaries at the top-level.
             //       * Warn about path not being selected.
 
-            string basePath = DlgSelectOutputFolder.SelectedPath;
+            separator = separator.Replace("\\t", "\t"); // Permit tabs in output
 
             Console.WriteLine("Write...");
             
-            WriteGroupsReport(report, basePath);
+            WriteGroupsReport(report, path, extension, separator);
 
-            WriteUsersReport(report, basePath);
+            WriteUsersReport(report, path, extension, separator);
 
-            WriteGroupAdminsReport(report, basePath);
+            WriteGroupAdminsReport(report, path, extension, separator);
 
-            WriteActiveCommunityGuestsReport(report, basePath);
+            WriteActiveCommunityGuestsReport(report, path, extension, separator);
 
-            WriteOtherCommunityGuestsReport(report, basePath);
+            WriteOtherCommunityGuestsReport(report, path, extension, separator);
         }
 
-        private static void WriteGroupAdminsReport(AlignmentReport report, string basePath)
+        private static void WriteGroupAdminsReport(AlignmentReport report, string basePath, string extension, string separator)
         {
             var groupAdminOutput = new StringBuilder();
-            groupAdminOutput.AppendLine("GroupID,CreationRightsState,Email");
+            groupAdminOutput.AppendLine($"GroupID{separator}CreationRightsState{separator}Email");
 
             foreach (var group in report.Groups)
             {
@@ -133,7 +132,7 @@ namespace NMARC
                         foreach (var adminEmail in vals)
                         {
                             var email = (string) adminEmail;
-                            groupAdminOutput.AppendLine( $"{group.Id},{key},{email}");
+                            groupAdminOutput.AppendLine( $"{group.Id}{separator}{key}{separator}{email}");
                         }
                     }
                 }
@@ -143,13 +142,13 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\groupadmins.csv", groupAdminOutput);
+            Utilities.WriteFile($@"{basePath}\groupadmins{extension}", groupAdminOutput);
         }
 
-        private static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath)
+        private static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath, string extension, string separator)
         {
             var communityGuestOutput = new StringBuilder();
-            communityGuestOutput.AppendLine("GroupID,Email");
+            communityGuestOutput.AppendLine($"GroupID{separator}Email");
 
             foreach (var group in report.Groups)
             {
@@ -158,19 +157,19 @@ namespace NMARC
                     {
                         foreach (var guest in group.ActiveCommunityGuests)
                         {
-                            communityGuestOutput.AppendLine($"{group.Id},{guest}");
+                            communityGuestOutput.AppendLine($"{group.Id}{separator}{guest}");
                         }
                     }
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\communityguests.csv", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\communityguests{extension}", communityGuestOutput);
         }
 
-        private static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath)
+        private static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath, string extension, string separator)
         {
             var communityGuestOutput = new StringBuilder();
-            communityGuestOutput.AppendLine("GroupID,Email");
+            communityGuestOutput.AppendLine($"GroupID{separator}Email");
 
             foreach (var group in report.Groups)
             {
@@ -180,48 +179,47 @@ namespace NMARC
                     {
                         foreach (var guest in group.OtherCommunityGuests)
                         {
-                            communityGuestOutput.AppendLine($"{group.Id},{guest}");
+                            communityGuestOutput.AppendLine($"{group.Id}{separator}{guest}");
                         }
                     }
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\othercommunityguests.csv", communityGuestOutput);
+            Utilities.WriteFile($@"{basePath}\othercommunityguests{extension}", communityGuestOutput);
         }
 
-        private static void WriteUsersReport(AlignmentReport report, string basePath)
+        private static void WriteUsersReport(AlignmentReport report, string basePath, string extension, string separator)
         {
             // USERS
             var userOutput = new StringBuilder();
             userOutput.AppendLine(
-                "Email,Internal,State,PrivateFileCount,PublicMessageCount,PrivateMessageCount,LastAccessed,AAD_State");
+                $"Email{separator}Internal{separator}State{separator}PrivateFileCount{separator}PublicMessageCount{separator}PrivateMessageCount{separator}LastAccessed{separator}AAD_State");
+            
             foreach (var user in report.Users)
             {
                 Console.WriteLine($"{user.Id}:{user.Email}");
 
-                userOutput.AppendLine(user.GetCsv());
+                userOutput.AppendLine(user.GetCsv(separator));
             }
 
-            Utilities.WriteFile($@"{basePath}\users.csv", userOutput);
+            Utilities.WriteFile($@"{basePath}\users{extension}", userOutput);
         }
 
-        private static void WriteGroupsReport(AlignmentReport report, string basePath)
+        private static void WriteGroupsReport(AlignmentReport report, string basePath, string extension, string separator)
         {
             // GROUPS
             var groupOutput = new StringBuilder();
 
             groupOutput.AppendLine(
-                "Id,Name,Type,PrivacySetting,State,MessageCount,LastMessageDate,ConnectedToO365,Memberships.External,Memberships.Internal,Uploads.SharePoint,Uploads.Yammer");
+                $"Id{separator}Name{separator}Type{separator}PrivacySetting{separator}State{separator}MessageCount{separator}LastMessageDate{separator}ConnectedToO365{separator}Memberships.External{separator}Memberships.Internal{separator}Uploads.SharePoint{separator}Uploads.Yammer");
             foreach (var group in report.Groups)
             {
                 Console.WriteLine($"{@group.Id}:{@group.Name}");
 
-                groupOutput.AppendLine(@group.GetCsv());
+                groupOutput.AppendLine(@group.GetCsv(separator));
             }
 
-            Utilities.WriteFile($@"{basePath}\groups.csv", groupOutput);
+            Utilities.WriteFile($@"{basePath}\groups{extension}", groupOutput);
         }
-
-
     }
 }
