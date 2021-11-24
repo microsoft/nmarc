@@ -1,12 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using NMARC.Models;
 using NMARC.Serialization;
+using System;
+using System.Windows.Forms;
 
 namespace NMARC
 {
@@ -98,128 +96,16 @@ namespace NMARC
             separator = separator.Replace("\\t", "\t"); // Permit tabs in output
 
             Console.WriteLine("Write...");
-            
-            WriteGroupsReport(report, path, extension, separator);
 
-            WriteUsersReport(report, path, extension, separator);
+            ReportWriter.WriteGroupsReport(report, path, extension, separator);
 
-            WriteGroupAdminsReport(report, path, extension, separator);
+            ReportWriter.WriteUsersReport(report, path, extension, separator);
 
-            WriteActiveCommunityGuestsReport(report, path, extension, separator);
+            ReportWriter.WriteGroupAdminsReport(report, path, extension, separator);
 
-            WriteOtherCommunityGuestsReport(report, path, extension, separator);
-        }
+            ReportWriter.WriteActiveCommunityGuestsReport(report, path, extension, separator);
 
-        private static void WriteGroupAdminsReport(AlignmentReport report, string basePath, string extension, string separator)
-        {
-            var groupAdminOutput = new StringBuilder();
-            groupAdminOutput.AppendLine($"GroupID{separator}CreationRightsState{separator}Email");
-
-            foreach (var group in report.Groups)
-            {
-                var admins = group.Administrators;
-
-                if (!(admins is string))
-                {
-                    Console.WriteLine($@"Group:{group.Administrators}");
-                    var convAdmins = (Dictionary<object, object>) admins;
-
-                    foreach (KeyValuePair<object, object> entry in convAdmins)
-                    {
-                        var key = entry.Key as string;
-                        var vals = (List<object>)entry.Value;
-
-                        foreach (var adminEmail in vals)
-                        {
-                            var email = (string) adminEmail;
-                            groupAdminOutput.AppendLine( $"{group.Id}{separator}{key}{separator}{email}");
-                        }
-                    }
-                }
-                else
-                {
-                    groupAdminOutput.AppendLine($"{group.Id},,No Admins");
-                }
-            }
-
-            Utilities.WriteFile($@"{basePath}\groupadmins{extension}", groupAdminOutput);
-        }
-
-        private static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath, string extension, string separator)
-        {
-            var communityGuestOutput = new StringBuilder();
-            communityGuestOutput.AppendLine($"GroupID{separator}Email");
-
-            foreach (var group in report.Groups)
-            {
-                if(group.ActiveCommunityGuests != null) { 
-                    if(group.ActiveCommunityGuests.Count > 0)
-                    {
-                        foreach (var guest in group.ActiveCommunityGuests)
-                        {
-                            communityGuestOutput.AppendLine($"{group.Id}{separator}{guest}");
-                        }
-                    }
-                }
-            }
-
-            Utilities.WriteFile($@"{basePath}\communityguests{extension}", communityGuestOutput);
-        }
-
-        private static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath, string extension, string separator)
-        {
-            var communityGuestOutput = new StringBuilder();
-            communityGuestOutput.AppendLine($"GroupID{separator}Email");
-
-            foreach (var group in report.Groups)
-            {
-                if (group.OtherCommunityGuests != null)
-                {
-                    if (group.OtherCommunityGuests.Count > 0)
-                    {
-                        foreach (var guest in group.OtherCommunityGuests)
-                        {
-                            communityGuestOutput.AppendLine($"{group.Id}{separator}{guest}");
-                        }
-                    }
-                }
-            }
-
-            Utilities.WriteFile($@"{basePath}\othercommunityguests{extension}", communityGuestOutput);
-        }
-
-        private static void WriteUsersReport(AlignmentReport report, string basePath, string extension, string separator)
-        {
-            // USERS
-            var userOutput = new StringBuilder();
-            userOutput.AppendLine(
-                $"Email{separator}Internal{separator}State{separator}PrivateFileCount{separator}PublicMessageCount{separator}PrivateMessageCount{separator}LastAccessed{separator}AAD_State");
-            
-            foreach (var user in report.Users)
-            {
-                Console.WriteLine($"{user.Id}:{user.Email}");
-
-                userOutput.AppendLine(user.GetCsv(separator));
-            }
-
-            Utilities.WriteFile($@"{basePath}\users{extension}", userOutput);
-        }
-
-        private static void WriteGroupsReport(AlignmentReport report, string basePath, string extension, string separator)
-        {
-            // GROUPS
-            var groupOutput = new StringBuilder();
-
-            groupOutput.AppendLine(
-                $"Id{separator}Name{separator}Type{separator}PrivacySetting{separator}State{separator}MessageCount{separator}LastMessageDate{separator}ConnectedToO365{separator}Memberships.External{separator}Memberships.Internal{separator}Uploads.SharePoint{separator}Uploads.Yammer");
-            foreach (var group in report.Groups)
-            {
-                Console.WriteLine($"{@group.Id}:{@group.Name}");
-
-                groupOutput.AppendLine(@group.GetCsv(separator));
-            }
-
-            Utilities.WriteFile($@"{basePath}\groups{extension}", groupOutput);
+            ReportWriter.WriteOtherCommunityGuestsReport(report, path, extension, separator);
         }
     }
 }
