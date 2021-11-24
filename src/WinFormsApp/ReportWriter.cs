@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using NMARC.Models;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,19 +10,33 @@ namespace NMARC
     public class ReportWriter
     {
         public AlignmentReport Report { get; }
-        public string BasePath { get; }
-        public string Extension { get; }
         public string Separator { get; }
 
-        public ReportWriter(AlignmentReport report, string basePath, string extension, string separator)
+        public ReportWriter(AlignmentReport report, string separator)
         {
             Report = report;
-            BasePath = basePath;
-            Extension = extension;
             Separator = separator;
         }
 
-        public void WriteGroupAdminsReport()
+        public void Write(string basePath, string extension)
+        {
+            var groupAdminReport = GenerateGroupAdminsReport();
+            Utilities.WriteFile($@"{basePath}\group-admins{extension}", groupAdminReport);
+
+            var activeCommunityGuestsReport = GenerateActiveCommunityGuestsReport();
+            Utilities.WriteFile($@"{basePath}\community-guests{extension}", activeCommunityGuestsReport);
+
+            var otherCommunityGuestsReport = GenerateOtherCommunityGuestsReport();
+            Utilities.WriteFile($@"{basePath}\other-community-guests{extension}", otherCommunityGuestsReport);
+
+            var usersReport = GenerateUsersReport();
+            Utilities.WriteFile($@"{basePath}\users{extension}", usersReport);
+
+            var groupsReport = GenerateGroupsReport();
+            Utilities.WriteFile($@"{basePath}\groups{extension}", groupsReport);
+        }
+
+        internal StringBuilder GenerateGroupAdminsReport()
         {
             var groupAdminOutput = new StringBuilder();
             groupAdminOutput.AppendLine($"GroupID{Separator}CreationRightsState{Separator}Email");
@@ -54,10 +67,10 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{BasePath}\groupadmins{Extension}", groupAdminOutput);
+            return groupAdminOutput;
         }
 
-        public void WriteActiveCommunityGuestsReport()
+        internal StringBuilder GenerateActiveCommunityGuestsReport()
         {
             var communityGuestOutput = new StringBuilder();
             communityGuestOutput.AppendLine($"GroupID{Separator}Email");
@@ -76,10 +89,10 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{BasePath}\communityguests{Extension}", communityGuestOutput);
+            return communityGuestOutput;
         }
 
-        public void WriteOtherCommunityGuestsReport()
+        internal StringBuilder GenerateOtherCommunityGuestsReport()
         {
             var communityGuestOutput = new StringBuilder();
             communityGuestOutput.AppendLine($"GroupID{Separator}Email");
@@ -98,12 +111,11 @@ namespace NMARC
                 }
             }
 
-            Utilities.WriteFile($@"{BasePath}\othercommunityguests{Extension}", communityGuestOutput);
+            return communityGuestOutput;
         }
 
-        public void WriteUsersReport()
+        internal StringBuilder GenerateUsersReport()
         {
-            // USERS
             var userOutput = new StringBuilder();
             userOutput.AppendLine(
                 $"Email{Separator}Internal{Separator}State{Separator}PrivateFileCount{Separator}PublicMessageCount{Separator}PrivateMessageCount{Separator}LastAccessed{Separator}AAD_State");
@@ -113,12 +125,11 @@ namespace NMARC
                 userOutput.AppendLine(FormatUserLine(user, Separator));
             }
 
-            Utilities.WriteFile($@"{BasePath}\users{Extension}", userOutput);
+            return userOutput;
         }
 
-        public void WriteGroupsReport()
+        internal StringBuilder GenerateGroupsReport()
         {
-            // GROUPS
             var groupOutput = new StringBuilder();
 
             groupOutput.AppendLine(
@@ -129,14 +140,14 @@ namespace NMARC
                 groupOutput.AppendLine(FormatGroupLine(@group, Separator));
             }
 
-            Utilities.WriteFile($@"{BasePath}\groups{Extension}", groupOutput);
+            return groupOutput;
         }
 
         /// <summary>
         /// Gets a representation of the user as a row of CSV
         /// </summary>
         /// <returns>String containing CSV.</returns>
-        public string FormatUserLine(User user, string separator)
+        internal string FormatUserLine(User user, string separator)
         {
             return
                 $@"{user.Email}{separator}{user.Internal}{separator}{user.State}{separator}{user.PrivateFileCount}{separator}{user.PublicMessageCount}{separator}{user.PrivateMessageCount}{separator}{user.LastAccessed}{separator}{user.AzureADState}";
@@ -146,7 +157,7 @@ namespace NMARC
         /// Gets a representation of the group as a row of CSV
         /// </summary>
         /// <returns>String containing CSV.</returns>
-        public string FormatGroupLine(Group group, string separator)
+        internal string FormatGroupLine(Group group, string separator)
         {
             return
                 $@"{group.Id}{separator}{group.Name}{separator}{group.Type}{separator}{group.PrivacySetting}{separator}{group.State}{separator}{group.MessageCount}{separator}{group.LastMessageDate}{separator}{group.ConnectedToO365}{separator}{group.Memberships.External}{separator}{group.Memberships.Internal}{separator}{group.Uploads.SharePoint}{separator}{group.Uploads.Yammer}";

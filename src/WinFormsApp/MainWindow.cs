@@ -97,17 +97,8 @@ namespace NMARC
 
             Console.WriteLine("Write...");
 
-            var reportWriter = new ReportWriter(report, path, extension, separator);
-
-            reportWriter.WriteGroupsReport();
-
-            reportWriter.WriteUsersReport();
-
-            reportWriter.WriteGroupAdminsReport();
-
-            reportWriter.WriteActiveCommunityGuestsReport();
-
-            reportWriter.WriteOtherCommunityGuestsReport();
+            var reportWriter = new ReportWriter(report, separator);
+            reportWriter.Write(path, extension);
         }
     }
 }
