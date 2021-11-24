@@ -36,7 +36,7 @@ namespace NMARC
             }
         }
 
-        private void btnOptions_Click(object sender, EventArgs e)
+        private void BtnOptions_Click(object sender, EventArgs e)
         {
             using (var dialog = new OptionsDialog(fileExtension, outputSeparator))
             {

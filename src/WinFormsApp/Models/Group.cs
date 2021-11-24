@@ -46,15 +46,5 @@ namespace NMARC.Models
                 
         [YamlMember(Alias = "other_community_guests", ApplyNamingConventions = false)]
         public List<string> OtherCommunityGuests { get; set; }
-        /// <summary>
-        /// Gets a representation of the group as a row of CSV
-        /// </summary>
-        /// <returns>String containing CSV.</returns>
-        public string GetCsv(string separator)
-        {
-            // TODO: Move to output method.
-            return
-                $@"{Id}{separator}{Name}{separator}{Type}{separator}{PrivacySetting}{separator}{State}{separator}{MessageCount}{separator}{LastMessageDate}{separator}{ConnectedToO365}{separator}{Memberships.External}{separator}{Memberships.Internal}{separator}{Uploads.SharePoint}{separator}{Uploads.Yammer}";
-        }
     }
 }

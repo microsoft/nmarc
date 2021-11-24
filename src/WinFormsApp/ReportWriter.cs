@@ -34,7 +34,6 @@ namespace NMARC
 
                 if (!(admins is string))
                 {
-                    Console.WriteLine($@"Group:{group.Administrators}");
                     var convAdmins = (Dictionary<object, object>)admins;
 
                     foreach (KeyValuePair<object, object> entry in convAdmins)
@@ -111,9 +110,7 @@ namespace NMARC
 
             foreach (var user in Report.Users)
             {
-                Console.WriteLine($"{user.Id}:{user.Email}");
-
-                userOutput.AppendLine(user.GetCsv(Separator));
+                userOutput.AppendLine(FormatUserLine(user, Separator));
             }
 
             Utilities.WriteFile($@"{BasePath}\users{Extension}", userOutput);
@@ -129,12 +126,30 @@ namespace NMARC
             
             foreach (var group in Report.Groups)
             {
-                Console.WriteLine($"{@group.Id}:{@group.Name}");
-
-                groupOutput.AppendLine(@group.GetCsv(Separator));
+                groupOutput.AppendLine(FormatGroupLine(@group, Separator));
             }
 
             Utilities.WriteFile($@"{BasePath}\groups{Extension}", groupOutput);
+        }
+
+        /// <summary>
+        /// Gets a representation of the user as a row of CSV
+        /// </summary>
+        /// <returns>String containing CSV.</returns>
+        public string FormatUserLine(User user, string separator)
+        {
+            return
+                $@"{user.Email}{separator}{user.Internal}{separator}{user.State}{separator}{user.PrivateFileCount}{separator}{user.PublicMessageCount}{separator}{user.PrivateMessageCount}{separator}{user.LastAccessed}{separator}{user.AzureADState}";
+        }
+
+        /// <summary>
+        /// Gets a representation of the group as a row of CSV
+        /// </summary>
+        /// <returns>String containing CSV.</returns>
+        public string FormatGroupLine(Group group, string separator)
+        {
+            return
+                $@"{group.Id}{separator}{group.Name}{separator}{group.Type}{separator}{group.PrivacySetting}{separator}{group.State}{separator}{group.MessageCount}{separator}{group.LastMessageDate}{separator}{group.ConnectedToO365}{separator}{group.Memberships.External}{separator}{group.Memberships.Internal}{separator}{group.Uploads.SharePoint}{separator}{group.Uploads.Yammer}";
         }
     }
 }

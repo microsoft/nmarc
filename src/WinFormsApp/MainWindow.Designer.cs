@@ -131,7 +131,7 @@ namespace NMARC
             this.btnOptions.TabIndex = 6;
             this.btnOptions.Text = "Options";
             this.btnOptions.UseVisualStyleBackColor = true;
-            this.btnOptions.Click += new System.EventHandler(this.btnOptions_Click);
+            this.btnOptions.Click += new System.EventHandler(this.BtnOptions_Click);
             // 
             // FrmNativeModeConc
             // 

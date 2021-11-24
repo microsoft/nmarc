@@ -43,16 +43,5 @@ namespace NMARC.Models
 
         [YamlMember(Alias = "AAD_state", ApplyNamingConventions = false)]
         public string AzureADState { get; set; }
-
-        /// <summary>
-        /// Gets a representation of the user as a row of CSV
-        /// </summary>
-        /// <returns>String containing CSV.</returns>
-        public string GetCsv(string separator)
-        {
-            // TODO: Get this out of here and into the code which handles output.
-            return
-                $@"{Email}{separator}{Internal}{separator}{State}{separator}{PrivateFileCount}{separator}{PublicMessageCount}{separator}{PrivateMessageCount}{separator}{LastAccessed}{separator}{AzureADState}";
-        }
     }
 }
