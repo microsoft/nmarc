@@ -85,6 +85,7 @@
     <Compile Include="OptionsDialog.Designer.cs">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReportWriter.cs" />
     <Compile Include="Serialization\AlignmentReportParser.cs" />
     <Compile Include="Serialization\LastAccessedTypeConverter.cs" />
     <Compile Include="Models\MemberCounts.cs" />
