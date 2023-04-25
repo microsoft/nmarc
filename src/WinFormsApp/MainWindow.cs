@@ -36,7 +36,7 @@ namespace NMARC
             }
         }
 
-        private void btnOptions_Click(object sender, EventArgs e)
+        private void BtnOptions_Click(object sender, EventArgs e)
         {
             using (var dialog = new OptionsDialog(fileExtension, outputSeparator))
             {
@@ -97,15 +97,8 @@ namespace NMARC
 
             Console.WriteLine("Write...");
 
-            ReportWriter.WriteGroupsReport(report, path, extension, separator);
-
-            ReportWriter.WriteUsersReport(report, path, extension, separator);
-
-            ReportWriter.WriteGroupAdminsReport(report, path, extension, separator);
-
-            ReportWriter.WriteActiveCommunityGuestsReport(report, path, extension, separator);
-
-            ReportWriter.WriteOtherCommunityGuestsReport(report, path, extension, separator);
+            var reportWriter = new ReportWriter(report, separator);
+            reportWriter.Write(path, extension);
         }
     }
 }
