@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using NMARC.Models;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,18 +9,69 @@ namespace NMARC
 {
     public class ReportWriter
     {
-        public static void WriteGroupAdminsReport(AlignmentReport report, string basePath, string extension, string separator)
-        {
-            var groupAdminOutput = new StringBuilder();
-            groupAdminOutput.AppendLine($"GroupID{separator}CreationRightsState{separator}Email");
+        public AlignmentReport Report { get; }
+        public string Separator { get; }
 
-            foreach (var group in report.Groups)
+        public ReportWriter(AlignmentReport report, string separator)
+        {
+            Report = report;
+            Separator = separator;
+        }
+
+        public void Write(string basePath, string extension)
+        {
+            var groupsWithoutAdminsReport = GenerateGroupsWithoutAdminsReport();
+            Utilities.WriteFile($@"{basePath}\groups-without-admins{extension}", groupsWithoutAdminsReport);
+
+            var groupAdminReport = GenerateGroupAdminsReport();
+            Utilities.WriteFile($@"{basePath}\group-admins{extension}", groupAdminReport);
+
+            var activeCommunityGuestsReport = GenerateActiveCommunityGuestsReport();
+            Utilities.WriteFile($@"{basePath}\community-guests{extension}", activeCommunityGuestsReport);
+
+            var otherCommunityGuestsReport = GenerateOtherCommunityGuestsReport();
+            Utilities.WriteFile($@"{basePath}\other-community-guests{extension}", otherCommunityGuestsReport);
+
+            var usersReport = GenerateUsersReport();
+            Utilities.WriteFile($@"{basePath}\users{extension}", usersReport);
+
+            var groupsReport = GenerateGroupsReport();
+            Utilities.WriteFile($@"{basePath}\groups{extension}", groupsReport);
+        }
+
+        internal StringBuilder GenerateGroupsWithoutAdminsReport()
+        {
+            var report = new StringBuilder();
+            report.AppendLine($"GroupID{Separator}Status");
+
+            foreach (var group in Report.Groups)
             {
                 var admins = group.Administrators;
 
                 if (!(admins is string))
                 {
-                    Console.WriteLine($@"Group:{group.Administrators}");
+                    // TODO: Refactor code for listing groups with no admins.
+                }
+                else
+                {
+                    report.AppendLine($"{group.Id}{Separator}No Admins found");
+                }
+            }
+
+            return report;
+        }
+
+        internal StringBuilder GenerateGroupAdminsReport()
+        {
+            var groupAdminOutput = new StringBuilder();
+            groupAdminOutput.AppendLine($"GroupID{Separator}CreationRightsState{Separator}Email");
+
+            foreach (var group in Report.Groups)
+            {
+                var admins = group.Administrators;
+
+                if (!(admins is string))
+                {
                     var convAdmins = (Dictionary<object, object>)admins;
 
                     foreach (KeyValuePair<object, object> entry in convAdmins)
@@ -32,25 +82,25 @@ namespace NMARC
                         foreach (var adminEmail in vals)
                         {
                             var email = (string)adminEmail;
-                            groupAdminOutput.AppendLine($"{group.Id}{separator}{key}{separator}{email}");
+                            groupAdminOutput.AppendLine($"{group.Id}{Separator}{key}{Separator}{email}");
                         }
                     }
                 }
                 else
                 {
-                    groupAdminOutput.AppendLine($"{group.Id},,No Admins");
+                    groupAdminOutput.AppendLine($"{group.Id}{Separator}{Separator}No Admins");
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\groupadmins{extension}", groupAdminOutput);
+            return groupAdminOutput;
         }
 
-        public static void WriteActiveCommunityGuestsReport(AlignmentReport report, string basePath, string extension, string separator)
+        internal StringBuilder GenerateActiveCommunityGuestsReport()
         {
             var communityGuestOutput = new StringBuilder();
-            communityGuestOutput.AppendLine($"GroupID{separator}Email");
+            communityGuestOutput.AppendLine($"GroupID{Separator}Email");
 
-            foreach (var group in report.Groups)
+            foreach (var group in Report.Groups)
             {
                 if (group.ActiveCommunityGuests != null)
                 {
@@ -58,21 +108,21 @@ namespace NMARC
                     {
                         foreach (var guest in group.ActiveCommunityGuests)
                         {
-                            communityGuestOutput.AppendLine($"{group.Id}{separator}{guest}");
+                            communityGuestOutput.AppendLine($"{group.Id}{Separator}{guest}");
                         }
                     }
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\communityguests{extension}", communityGuestOutput);
+            return communityGuestOutput;
         }
 
-        public static void WriteOtherCommunityGuestsReport(AlignmentReport report, string basePath, string extension, string separator)
+        internal StringBuilder GenerateOtherCommunityGuestsReport()
         {
             var communityGuestOutput = new StringBuilder();
-            communityGuestOutput.AppendLine($"GroupID{separator}Email");
+            communityGuestOutput.AppendLine($"GroupID{Separator}Email");
 
-            foreach (var group in report.Groups)
+            foreach (var group in Report.Groups)
             {
                 if (group.OtherCommunityGuests != null)
                 {
@@ -80,47 +130,62 @@ namespace NMARC
                     {
                         foreach (var guest in group.OtherCommunityGuests)
                         {
-                            communityGuestOutput.AppendLine($"{group.Id}{separator}{guest}");
+                            communityGuestOutput.AppendLine($"{group.Id}{Separator}{guest}");
                         }
                     }
                 }
             }
 
-            Utilities.WriteFile($@"{basePath}\othercommunityguests{extension}", communityGuestOutput);
+            return communityGuestOutput;
         }
 
-        public static void WriteUsersReport(AlignmentReport report, string basePath, string extension, string separator)
+        internal StringBuilder GenerateUsersReport()
         {
-            // USERS
             var userOutput = new StringBuilder();
             userOutput.AppendLine(
-                $"Email{separator}Internal{separator}State{separator}PrivateFileCount{separator}PublicMessageCount{separator}PrivateMessageCount{separator}LastAccessed{separator}AAD_State");
+                $"Email{Separator}Internal{Separator}State{Separator}PrivateFileCount{Separator}PublicMessageCount{Separator}PrivateMessageCount{Separator}LastAccessed{Separator}AAD_State");
 
-            foreach (var user in report.Users)
+            foreach (var user in Report.Users)
             {
-                Console.WriteLine($"{user.Id}:{user.Email}");
-
-                userOutput.AppendLine(user.GetCsv(separator));
+                userOutput.AppendLine(FormatUserLine(user, Separator));
             }
 
-            Utilities.WriteFile($@"{basePath}\users{extension}", userOutput);
+            return userOutput;
         }
 
-        public static void WriteGroupsReport(AlignmentReport report, string basePath, string extension, string separator)
+        internal StringBuilder GenerateGroupsReport()
         {
-            // GROUPS
             var groupOutput = new StringBuilder();
 
             groupOutput.AppendLine(
-                $"Id{separator}Name{separator}Type{separator}PrivacySetting{separator}State{separator}MessageCount{separator}LastMessageDate{separator}ConnectedToO365{separator}Memberships.External{separator}Memberships.Internal{separator}Uploads.SharePoint{separator}Uploads.Yammer");
-            foreach (var group in report.Groups)
+                $"Id{Separator}Name{Separator}Type{Separator}PrivacySetting{Separator}State{Separator}MessageCount{Separator}LastMessageDate{Separator}ConnectedToO365{Separator}Memberships.External{Separator}Memberships.Internal{Separator}Uploads.SharePoint{Separator}Uploads.Yammer");
+            
+            foreach (var group in Report.Groups)
             {
-                Console.WriteLine($"{@group.Id}:{@group.Name}");
-
-                groupOutput.AppendLine(@group.GetCsv(separator));
+                groupOutput.AppendLine(FormatGroupLine(@group, Separator));
             }
 
-            Utilities.WriteFile($@"{basePath}\groups{extension}", groupOutput);
+            return groupOutput;
+        }
+
+        /// <summary>
+        /// Gets a representation of the user as a row of CSV
+        /// </summary>
+        /// <returns>String containing CSV.</returns>
+        internal string FormatUserLine(User user, string separator)
+        {
+            return
+                $@"{user.Email}{separator}{user.Internal}{separator}{user.State}{separator}{user.PrivateFileCount}{separator}{user.PublicMessageCount}{separator}{user.PrivateMessageCount}{separator}{user.LastAccessed}{separator}{user.AzureADState}";
+        }
+
+        /// <summary>
+        /// Gets a representation of the group as a row of CSV
+        /// </summary>
+        /// <returns>String containing CSV.</returns>
+        internal string FormatGroupLine(Group group, string separator)
+        {
+            return
+                $@"{group.Id}{separator}{group.Name}{separator}{group.Type}{separator}{group.PrivacySetting}{separator}{group.State}{separator}{group.MessageCount}{separator}{group.LastMessageDate}{separator}{group.ConnectedToO365}{separator}{group.Memberships.External}{separator}{group.Memberships.Internal}{separator}{group.Uploads.SharePoint}{separator}{group.Uploads.Yammer}";
         }
     }
 }
