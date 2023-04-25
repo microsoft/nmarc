@@ -20,6 +20,9 @@ namespace NMARC
 
         public void Write(string basePath, string extension)
         {
+            var groupsWithoutAdminsReport = GenerateGroupsWithoutAdminsReport();
+            Utilities.WriteFile($@"{basePath}\groups-without-admins{extension}", groupsWithoutAdminsReport);
+
             var groupAdminReport = GenerateGroupAdminsReport();
             Utilities.WriteFile($@"{basePath}\group-admins{extension}", groupAdminReport);
 
@@ -34,6 +37,28 @@ namespace NMARC
 
             var groupsReport = GenerateGroupsReport();
             Utilities.WriteFile($@"{basePath}\groups{extension}", groupsReport);
+        }
+
+        internal StringBuilder GenerateGroupsWithoutAdminsReport()
+        {
+            var report = new StringBuilder();
+            report.AppendLine($"GroupID{Separator}Status");
+
+            foreach (var group in Report.Groups)
+            {
+                var admins = group.Administrators;
+
+                if (!(admins is string))
+                {
+                    // TODO: Refactor code for listing groups with no admins.
+                }
+                else
+                {
+                    report.AppendLine($"{group.Id}{Separator}No Admins found");
+                }
+            }
+
+            return report;
         }
 
         internal StringBuilder GenerateGroupAdminsReport()
@@ -63,7 +88,7 @@ namespace NMARC
                 }
                 else
                 {
-                    groupAdminOutput.AppendLine($"{group.Id},,No Admins");
+                    groupAdminOutput.AppendLine($"{group.Id}{Separator}{Separator}No Admins");
                 }
             }
 
