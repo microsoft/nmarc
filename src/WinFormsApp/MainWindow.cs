@@ -60,7 +60,20 @@ namespace NMARC
                 var report = AlignmentReportParser.ParseAlignmentReport(txtYamlInputPath.Text);
                 
                 txtResultsBox.Text += "YAML file loaded and parsed.\n\r\n";
-                txtResultsBox.Text += $"Found {report.Groups.Count} groups and {report.Users.Count} users.\n\r\n";
+                txtResultsBox.Text += $"Found:\n\r\n";
+
+                if (report.Groups != null)
+                {
+                    txtResultsBox.Text += GenerateResultLine("groups", report.Groups.Count);
+                }
+                if (report.Users != null)
+                {
+                    txtResultsBox.Text += GenerateResultLine("users", report.Users.Count);
+                }
+                if (report.GroupLevelGuests != null)
+                {
+                    txtResultsBox.Text += GenerateResultLine("guests", report.GroupLevelGuests.Count);
+                }
                 
                 if (report.Groups.Count == 0 && report.Users.Count == 0)
                 {
@@ -99,6 +112,17 @@ namespace NMARC
 
             var reportWriter = new ReportWriter(report, separator);
             reportWriter.Write(path, extension);
+        }
+
+        /// <summary>
+        /// Formats lines about the object counts.
+        /// </summary>
+        /// <param name="name">Name of the object.</param>
+        /// <param name="count">Count of objects.</param>
+        /// <returns></returns>
+        public string GenerateResultLine(string name, long count)
+        {
+            return $"{count} {name}\n\r\n"; ;
         }
     }
 }

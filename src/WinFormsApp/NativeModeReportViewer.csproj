@@ -73,9 +73,9 @@
     <Compile Include="Models\AlignmentReport.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupAdministrators.cs" />
-    <Compile Include="Models\GroupLevelGuest.cs" />
-    <Compile Include="Models\GroupLevelGuestContainer.cs" />
     <Compile Include="Models\GroupsContainer.cs" />
+    <Compile Include="Models\Guest.cs" />
+    <Compile Include="Models\GuestContainer.cs" />
     <Compile Include="Models\LastAccessed.cs" />
     <Compile Include="Models\LastMessageAt.cs" />
     <Compile Include="Models\UsersContainer.cs" />
