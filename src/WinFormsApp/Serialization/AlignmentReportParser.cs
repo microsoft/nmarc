@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NativeModeReportViewer.Models;
 using NMARC.Models;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
@@ -101,17 +102,15 @@ namespace NMARC.Serialization
             return doc.Users.Values.ToList();
         }
 
-        public static List<GroupLevelGuest> ParseGuests(Parser parser)
+        public static List<Guest> ParseGuests(Parser parser)
         {
             var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .WithTypeConverter(new LastAccessedTypeConverter())
-                .IgnoreUnmatchedProperties()
-                .Build();
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+              .IgnoreUnmatchedProperties()
+              .Build();
+            var groupLevelGuests = deserializer.Deserialize<Guests>(parser).GroupLevelGuests;
 
-            var doc = deserializer.Deserialize<GroupLevelGuestContainer>(parser);
-
-            return doc.GroupLevelGuests.Values.ToList();
+            return groupLevelGuests.Values.ToList();
         }
     }
 }
