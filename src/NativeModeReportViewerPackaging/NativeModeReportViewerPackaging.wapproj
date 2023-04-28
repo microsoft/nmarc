@@ -56,7 +56,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\WinFormsApp\NativeModeReportViewer.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>DA1F5D1620E8933D8C0F5A60771AB44043DCB60F</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>E76EDCD73894E2AFDBDA3F276AFA3EC7851CECBC</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -156,6 +156,7 @@
     <Content Include="Images\Wide310x150Logo.scale-150.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
+    <None Include="NativeModeReportViewerPackaging_TemporaryKey.pfx" />
     <Content Include="Square44x44Logo.scale-100.png" />
     <Content Include="Square44x44Logo.scale-150.png" />
     <Content Include="Square44x44Logo.scale-400.png" />
