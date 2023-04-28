@@ -75,10 +75,10 @@ namespace NMARC
             // 
             // txtFileExtension
             // 
-            this.txtFileExtension.Location = new System.Drawing.Point(121, 6);
+            this.txtFileExtension.Location = new System.Drawing.Point(135, 6);
             this.txtFileExtension.MaxLength = 10;
             this.txtFileExtension.Name = "txtFileExtension";
-            this.txtFileExtension.Size = new System.Drawing.Size(126, 20);
+            this.txtFileExtension.Size = new System.Drawing.Size(112, 20);
             this.txtFileExtension.TabIndex = 2;
             this.txtFileExtension.Text = ".CSV";
             this.txtFileExtension.ModifiedChanged += new System.EventHandler(this.txtFileExtension_ModifiedChanged);
@@ -143,10 +143,10 @@ namespace NMARC
             // 
             // txtOutputSeparator
             // 
-            this.txtOutputSeparator.Location = new System.Drawing.Point(121, 142);
+            this.txtOutputSeparator.Location = new System.Drawing.Point(135, 142);
             this.txtOutputSeparator.MaxLength = 4;
             this.txtOutputSeparator.Name = "txtOutputSeparator";
-            this.txtOutputSeparator.Size = new System.Drawing.Size(126, 20);
+            this.txtOutputSeparator.Size = new System.Drawing.Size(112, 20);
             this.txtOutputSeparator.TabIndex = 6;
             this.txtOutputSeparator.Text = ",";
             this.txtOutputSeparator.ModifiedChanged += new System.EventHandler(this.txtOutputSeparator_ModifiedChanged);
@@ -178,8 +178,8 @@ namespace NMARC
             // OptionsDialog
             // 
             this.AcceptButton = this.btnOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(280, 291);
             this.Controls.Add(this.groupBox2);
