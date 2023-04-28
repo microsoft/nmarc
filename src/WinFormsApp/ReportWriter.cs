@@ -147,7 +147,14 @@ namespace NMARC
 
             foreach (var user in Report.Users)
             {
-                userOutput.AppendLine(FormatUserLine(user, Separator));
+                if (user != null)
+                {
+                    userOutput.AppendLine(FormatUserLine(user, Separator));
+                }
+                else
+                {
+                    userOutput.AppendLine(FormatUserLine(new User(), Separator));
+                }
             }
 
             return userOutput;
@@ -162,7 +169,14 @@ namespace NMARC
             
             foreach (var group in Report.Groups)
             {
-                groupOutput.AppendLine(FormatGroupLine(@group, Separator));
+                if (group != null)
+                {
+                    groupOutput.AppendLine(FormatGroupLine(@group, Separator));
+                }
+                else
+                {
+                    groupOutput.AppendLine(FormatGroupLine(new Group(), Separator));
+                }
             }
 
             return groupOutput;
