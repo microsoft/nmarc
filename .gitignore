@@ -362,3 +362,7 @@ FodyWeavers.xsd
 
 # Upgrade Assistant backup
 /src.backup/WinFormsApp
+
+# Upgrade Assistant reports
+*.sarif
+*.clef
