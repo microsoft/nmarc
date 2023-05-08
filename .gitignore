@@ -359,3 +359,10 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.DotSettings
+
+# Upgrade Assistant backup
+/src.backup/WinFormsApp
+
+# Upgrade Assistant reports
+*.sarif
+*.clef
