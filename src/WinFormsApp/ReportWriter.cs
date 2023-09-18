@@ -2,7 +2,10 @@
 // Licensed under the MIT License.
 
 using NMARC.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace NMARC
@@ -41,6 +44,8 @@ namespace NMARC
 
         internal StringBuilder GenerateGroupsWithoutAdminsReport()
         {
+            // TODO: Refactor code for listing groups with no admins.
+
             var report = new StringBuilder();
             report.AppendLine($"GroupID{Separator}Status");
 
@@ -50,11 +55,32 @@ namespace NMARC
 
                 if (!(admins is string))
                 {
-                    // TODO: Refactor code for listing groups with no admins.
+                    Console.WriteLine("Refactor code for listing groups with no admins.");
+                    Dictionary<object, object> converted_admins = (Dictionary<object, object>)admins;
+
+                    long currentAdminCount = 0;
+
+                    foreach (var key in converted_admins.Keys)
+                    {
+                        List<object> countKey = (List<object>)converted_admins[key];
+                        if (countKey.Count == 0 ) // Drilled into object to get count
+                        {
+                            // Don't increment it.
+                        }
+                        else
+                        {
+                            currentAdminCount++; // Increment it
+                        }
+                    }
+                    if (currentAdminCount == 0)
+                    {
+                        report.AppendLine($"{group.Id}{Separator}No Admins found");
+                    }
                 }
-                else
+                else // It's a string (likely to be AC)
                 {
                     report.AppendLine($"{group.Id}{Separator}No Admins found");
+                    Console.WriteLine("Hit existing wrting code");
                 }
             }
 
