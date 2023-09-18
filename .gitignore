@@ -366,3 +366,6 @@ FodyWeavers.xsd
 # Upgrade Assistant reports
 *.sarif
 *.clef
+
+#Jetbrains
+.idea
